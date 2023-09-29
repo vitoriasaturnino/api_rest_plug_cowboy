@@ -5,16 +5,24 @@ defmodule ApiRestPlugCowboy.Application do
 
   use Application
 
-  @impl true
   def start(_type, _args) do
+    import Supervisor.Spec
+
     children = [
-      # Starts a worker by calling: ApiRestPlugCowboy.Worker.start_link(arg)
-      # {ApiRestPlugCowboy.Worker, arg}
+      Plug.Cowboy.child_spec(
+        scheme: :http,
+        plug: ApiRestPlugCowboy.UserEndpoint,
+        options: Application.get_env(:, :endPoint) [port:]
+      )
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: ApiRestPlugCowboy.Supervisor]
+    opts = [
+      strategy: :one_for_one,
+      name: ApiRestPlugCowboy.Supervisor
+    ]
+
     Supervisor.start_link(children, opts)
   end
 end

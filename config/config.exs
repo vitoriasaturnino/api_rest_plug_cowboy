@@ -1,4 +1,3 @@
-import Config
+use Mix.Config
 
-config :example,
-  cowboy_port: 8080
+import_config "#{Mix.env()}.exs"
